@@ -163,7 +163,7 @@ public class ExtendedvSphereClient {
 	}
 
 	public static void main(String[] args) {
-		ExtendedvSphereClient client = new ExtendedvSphereClient("https://133.133.135.35", "administrator@vsphere.test", "Onceas!234");
-		System.out.println(client.getConnection());
+		ExtendedvSphereClient client = new ExtendedvSphereClient("https://133.133.135.35/sdk/vimService", "administrator@vsphere.test", "Onceas!234");
+		System.out.println(client.getConnection().getServiceContent().getAbout().getFullName());
 	}
 }
