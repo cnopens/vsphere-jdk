@@ -81,6 +81,11 @@ public class ExtendedvSphereClient {
 		}
 	}
 	
+	
+	public Connection getConnection() {
+		return connection;
+	}
+
 	public VirtualMachineClusterImpl virtualMachineClusters() {
 		return new VirtualMachineClusterImpl(this);
 	}
@@ -157,4 +162,8 @@ public class ExtendedvSphereClient {
 		return new VirtualMachineNetworkImpl(this);
 	}
 
+	public static void main(String[] args) {
+		ExtendedvSphereClient client = new ExtendedvSphereClient("https://133.133.135.35", "administrator@vsphere.test", "Onceas!234");
+		System.out.println(client.getConnection());
+	}
 }
