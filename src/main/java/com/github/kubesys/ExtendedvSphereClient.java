@@ -91,6 +91,7 @@ public class ExtendedvSphereClient {
 
 	public static void main(String[] args) throws Exception {
 		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas!234");
-		client.virtualmachines().list();
+		System.out.println(client.virtualmachines().list());
+		System.out.println(client.virtualmachines().stopVM("测试1"));
 	}
 }
