@@ -9,6 +9,9 @@ import com.github.kubesys.ExtendedvSphereClient;
 import com.vmware.vcenter.VM;
 import com.vmware.vcenter.VMTypes.Summary;
 import com.vmware.vcenter.VMTypes.FilterSpec.Builder;
+import com.vmware.vcenter.vm.Power;
+
+import vmware.samples.vcenter.helpers.VmHelper;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -25,21 +28,44 @@ public class VirtualMachineImpl extends AbstractImpl {
 
 	protected VM vmService;
 	
+	protected Power vmPowerService;
+	
 	public VirtualMachineImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.vmService = client.getVapiAuthHelper().getStubFactory()
                     .createStub(VM.class, client.getSessionStubConfig());
+		 this.vmPowerService = client.getVapiAuthHelper().getStubFactory()
+				 	.createStub(Power.class, client.getSessionStubConfig()); 
 	}
 	
-	public void list() {
-		Builder bldr = new Builder();
-        List<Summary> vmList = this.vmService.list(bldr.build());
-        System.out.println("----------------------------------------");
-        System.out.println("List of VMs");
-        for (Summary vmSummary : vmList) {
-            System.out.println(vmSummary);
-        }
-        System.out.println("----------------------------------------");
+	public List<Summary> list() {
+        return this.vmService.list(new Builder().build());
+	}
+	
+	public boolean stopVM(String name) {
+		this.vmPowerService.stop(getVMId(name));
+        return true;
+	}
+	
+	public boolean startVM(String name) {
+		this.vmPowerService.start(getVMId(name));
+        return true;
+	}
+	
+	public boolean resetVM(String name) {
+		this.vmPowerService.reset(getVMId(name));
+        return true;
+	}
+	
+	public boolean suspendVM(String name) {
+		this.vmPowerService.suspend(getVMId(name));
+        return true;
+	}
+	
+	protected String getVMId(String name) {
+		String vmId = VmHelper.getVM(client.getVapiAuthHelper().getStubFactory(),
+				client.getSessionStubConfig(), name);
+		return vmId;
 	}
 	
 }
