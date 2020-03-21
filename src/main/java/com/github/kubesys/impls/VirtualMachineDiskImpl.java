@@ -3,12 +3,13 @@
  */
 package com.github.kubesys.impls;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.github.kubesys.ExtendedvSphereClient;
-import com.vmware.vcenter.VM;
+import com.github.kubesys.utils.ConvertorUtils;
 import com.vmware.vcenter.vm.hardware.Disk;
+import com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec;
+import com.vmware.vcenter.vm.hardware.DiskTypes.Info;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -26,13 +27,9 @@ public class VirtualMachineDiskImpl extends AbstractImpl {
 
 	protected Disk diskService;
 	
-	protected VM vmService;
-
 	public VirtualMachineDiskImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.diskService = client.getVapiAuthHelper().getStubFactory().createStub(Disk.class,
-				client.getSessionStubConfig());
-		this.vmService = client.getVapiAuthHelper().getStubFactory().createStub(VM.class,
 				client.getSessionStubConfig());
 	}
 
@@ -40,8 +37,18 @@ public class VirtualMachineDiskImpl extends AbstractImpl {
 		return this.diskService.list(vmId);
 	}
 	
-	public Collection<com.vmware.vcenter.vm.hardware.DiskTypes.Info> get(String vmId) {
-		return this.vmService.get(vmId).getDisks().values();
+	public String create(String uuid, String disk) {
+		List<CreateSpec> disks = ConvertorUtils.toDisks(disk);
+		return this.diskService.create(uuid, disks.get(0));
+	}
+	
+	public boolean delete(String uuid, String diskId) {
+		this.diskService.delete(uuid, diskId);
+		return true;
+	}
+	
+	public Info get(String uuid, String diskId) {
+		return this.diskService.get(uuid, diskId);
 	}
 
 }

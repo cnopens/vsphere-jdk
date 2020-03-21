@@ -38,12 +38,10 @@ public class ConvertorUtils {
 		for (String diskDesc : disksStr.split("--disk")) {
 			com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec disk = new com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec();
 			VmdkCreateSpec newVmdk = new VmdkCreateSpec();
-			for (String desc : diskDesc.trim().split(",")) {
-				if (!desc.contains("=")) {
-					newVmdk.setName(desc);
-				} else if (desc.trim().startsWith("size=")) {
-					newVmdk.setCapacity(GB * Long.parseLong(desc.split("=")[1].trim()));
-				}
+			String[] descs = diskDesc.trim().split(",");
+			newVmdk.setName(descs[0]);
+			if (descs[1].trim().startsWith("size=")) {
+				newVmdk.setCapacity(GB * Long.parseLong(descs[1].split("=")[1].trim()));
 			}
 			disk.setNewVmdk(newVmdk);
 			list.add(disk);
