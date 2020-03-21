@@ -13,6 +13,7 @@ import com.github.kubesys.ExtendedvSphereClient;
 import com.vmware.vcenter.VMTypes;
 import com.vmware.vcenter.vm.hardware.CdromTypes;
 import com.vmware.vcenter.vm.hardware.CpuTypes;
+import com.vmware.vcenter.vm.hardware.DiskTypes;
 import com.vmware.vcenter.vm.hardware.DiskTypes.VmdkCreateSpec;
 import com.vmware.vcenter.vm.hardware.EthernetTypes;
 import com.vmware.vcenter.vm.hardware.EthernetTypes.BackingType;
@@ -36,15 +37,15 @@ public class ConvertorUtils {
 	public static List<com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec> toDisks(String disksStr) {
 		List<com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec> list = new ArrayList<com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec>();
 		for (String diskDesc : disksStr.split("--disk")) {
-			com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec disk = new com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec();
-			VmdkCreateSpec newVmdk = new VmdkCreateSpec();
+			com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec.Builder disk = new com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec.Builder();
+			com.vmware.vcenter.vm.hardware.DiskTypes.VmdkCreateSpec.Builder newVmdk = new com.vmware.vcenter.vm.hardware.DiskTypes.VmdkCreateSpec.Builder();
 			String[] descs = diskDesc.trim().split(",");
 			newVmdk.setName(descs[0]);
 			if (descs[1].trim().startsWith("size=")) {
 				newVmdk.setCapacity(GB * Long.parseLong(descs[1].split("=")[1].trim()));
 			}
-			disk.setNewVmdk(newVmdk);
-			list.add(disk);
+			disk.setNewVmdk(newVmdk.build());
+			list.add(disk.build());
 		}
 		return list;
 	}

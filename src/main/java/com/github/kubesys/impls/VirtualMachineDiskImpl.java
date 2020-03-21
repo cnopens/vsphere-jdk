@@ -37,18 +37,18 @@ public class VirtualMachineDiskImpl extends AbstractImpl {
 		return this.diskService.list(vmId);
 	}
 	
-	public String create(String uuid, String disk) {
+	public String create(String datastoreid, String disk) {
 		List<CreateSpec> disks = ConvertorUtils.toDisks(disk);
-		return this.diskService.create(uuid, disks.get(0));
+		return this.diskService.create(datastoreid, disks.get(0));
 	}
 	
-	public boolean delete(String uuid, String diskId) {
-		this.diskService.delete(uuid, diskId);
+	public boolean delete(String datastoreid, String diskId) {
+		this.diskService.delete(datastoreid, diskId);
 		return true;
 	}
 	
-	public Info get(String uuid, String diskId) {
-		return this.diskService.get(uuid, diskId);
+	public Info get(String datastoreid, String diskId) {
+		return this.diskService.get(datastoreid, diskId);
 	}
 
 }
