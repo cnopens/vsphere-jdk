@@ -30,8 +30,8 @@ public class VirtualMachineDiskImpl extends AbstractImpl {
 				client.getSessionStubConfig());
 	}
 
-	public List<com.vmware.vcenter.vm.hardware.DiskTypes.Summary> list(String datacenter) {
-		return this.diskService.list(datacenter);
+	public List<com.vmware.vcenter.vm.hardware.DiskTypes.Summary> list(String vmId) {
+		return this.diskService.list(vmId);
 	}
 	
 	public com.vmware.vcenter.vm.hardware.DiskTypes.Info get(String datacenter, String name) {
