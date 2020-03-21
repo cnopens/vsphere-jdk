@@ -7,6 +7,8 @@ package com.github.kubesys;
 import org.apache.log4j.Logger;
 
 import com.github.kubesys.impls.VirtualMachineImpl;
+import com.github.kubesys.impls.VirtualMachineNetworkImpl;
+import com.github.kubesys.impls.VirtualMachinePoolImpl;
 import com.vmware.vapi.bindings.StubConfiguration;
 import com.vmware.vapi.protocol.HttpConfiguration;
 import com.vmware.vapi.protocol.HttpConfiguration.SslConfiguration;
@@ -88,9 +90,19 @@ public class ExtendedvSphereClient {
 	public VirtualMachineImpl virtualmachines() {
 		return new VirtualMachineImpl(this);
 	}
+	
+	public VirtualMachineNetworkImpl virtualmachinenetworks() {
+		return new VirtualMachineNetworkImpl(this);
+	}
+	
+	public VirtualMachinePoolImpl virtualmachinenetpools() {
+		return new VirtualMachinePoolImpl(this);
+	}
 
 	public static void main(String[] args) throws Exception {
 		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas!234");
+		System.out.println(client.virtualmachinenetpools().listDataCeneters());
+		System.out.println(client.virtualmachinenetpools().listDatastores());
 		System.out.println(client.virtualmachines().list());
 		System.out.println(client.virtualmachines().stopVM("测试1"));
 	}
