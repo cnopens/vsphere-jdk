@@ -6,11 +6,7 @@ package com.github.kubesys.impls;
 import java.util.List;
 
 import com.github.kubesys.ExtendedvSphereClient;
-import com.vmware.vcenter.Cluster;
-import com.vmware.vcenter.Datacenter;
-import com.vmware.vcenter.Datastore;
-import com.vmware.vcenter.Folder;
-import com.vmware.vcenter.Host;
+import com.vmware.vcenter.vm.hardware.Disk;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -26,53 +22,20 @@ import com.vmware.vcenter.Host;
  */
 public class VirtualMachineDiskImpl extends AbstractImpl {
 
-	protected Datacenter datacneterService;
+	protected Disk diskService;
 
-	protected Cluster clusterService;
-	
-	protected Datastore datastoreService;
-	
-	protected Host hostService;
-	
-	protected Folder folderService;
-	
 	public VirtualMachineDiskImpl(ExtendedvSphereClient client) {
 		super(client);
-		this.datacneterService = client.getVapiAuthHelper().getStubFactory().createStub(Datacenter.class,
-				client.getSessionStubConfig());
-		this.clusterService = client.getVapiAuthHelper().getStubFactory().createStub(Cluster.class,
-				client.getSessionStubConfig());
-		this.datastoreService = client.getVapiAuthHelper().getStubFactory().createStub(Datastore.class,
-				client.getSessionStubConfig());
-		this.hostService = client.getVapiAuthHelper().getStubFactory().createStub(Host.class,
-				client.getSessionStubConfig());
-		this.folderService = client.getVapiAuthHelper().getStubFactory().createStub(Folder.class,
+		this.diskService = client.getVapiAuthHelper().getStubFactory().createStub(Disk.class,
 				client.getSessionStubConfig());
 	}
 
-	public List<com.vmware.vcenter.DatacenterTypes.Summary> listDataCeneters() {
-		com.vmware.vcenter.DatacenterTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.DatacenterTypes.FilterSpec.Builder();
-		return this.datacneterService.list(brdl.build());
+	public List<com.vmware.vcenter.vm.hardware.DiskTypes.Summary> list(String datacenter) {
+		return this.diskService.list(datacenter);
+	}
+	
+	public com.vmware.vcenter.vm.hardware.DiskTypes.Info get(String datacenter, String name) {
+		return this.diskService.get(datacenter, name);
 	}
 
-	public List<com.vmware.vcenter.ClusterTypes.Summary> listClusters() {
-		com.vmware.vcenter.ClusterTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.ClusterTypes.FilterSpec.Builder();
-		return this.clusterService.list(brdl.build());
-	}
-	
-	public List<com.vmware.vcenter.DatastoreTypes.Summary> listDatastores() {
-		com.vmware.vcenter.DatastoreTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.DatastoreTypes.FilterSpec.Builder();
-		return this.datastoreService.list(brdl.build());
-	}
-	
-	public List<com.vmware.vcenter.HostTypes.Summary> listHosts() {
-		com.vmware.vcenter.HostTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.HostTypes.FilterSpec.Builder();
-		return this.hostService.list(brdl.build());
-	}
-	
-	public List<com.vmware.vcenter.FolderTypes.Summary> listFolders() {
-		com.vmware.vcenter.FolderTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.FolderTypes.FilterSpec.Builder();
-		return this.folderService.list(brdl.build());
-	}
-	
 }

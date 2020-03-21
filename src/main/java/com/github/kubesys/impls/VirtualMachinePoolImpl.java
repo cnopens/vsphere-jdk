@@ -54,15 +54,27 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		com.vmware.vcenter.DatacenterTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.DatacenterTypes.FilterSpec.Builder();
 		return this.datacneterService.list(brdl.build());
 	}
+	
+	public com.vmware.vcenter.DatacenterTypes.Info getDataCeneter(String name) {
+		return this.datacneterService.get(name);
+	}
 
 	public List<com.vmware.vcenter.ClusterTypes.Summary> listClusters() {
 		com.vmware.vcenter.ClusterTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.ClusterTypes.FilterSpec.Builder();
 		return this.clusterService.list(brdl.build());
 	}
 	
+	public com.vmware.vcenter.ClusterTypes.Info getCluster(String name) {
+		return this.clusterService.get(name);
+	}
+	
 	public List<com.vmware.vcenter.DatastoreTypes.Summary> listDatastores() {
 		com.vmware.vcenter.DatastoreTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.DatastoreTypes.FilterSpec.Builder();
 		return this.datastoreService.list(brdl.build());
+	}
+	
+	public com.vmware.vcenter.DatastoreTypes.Info getDatastore(String name) {
+		return this.datastoreService.get(name);
 	}
 	
 	public List<com.vmware.vcenter.HostTypes.Summary> listHosts() {
