@@ -111,6 +111,6 @@ public class ExtendedvSphereClient {
 		System.out.println(client.virtualmachines().list());
 //		System.out.println(client.virtualmachines().stopVM("测试1"));
 		System.out.println(client.virtualmachinenetdisks().list("vm-15"));
-		System.out.println(client.virtualmachinenetdisks().get("vm-15", null));
+		System.out.println(client.virtualmachinenetdisks().get("vm-15"));
 	}
 }

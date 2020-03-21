@@ -3,9 +3,11 @@
  */
 package com.github.kubesys.impls;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.github.kubesys.ExtendedvSphereClient;
+import com.vmware.vcenter.VM;
 import com.vmware.vcenter.vm.hardware.Disk;
 
 /**
@@ -23,10 +25,14 @@ import com.vmware.vcenter.vm.hardware.Disk;
 public class VirtualMachineDiskImpl extends AbstractImpl {
 
 	protected Disk diskService;
+	
+	protected VM vmService;
 
 	public VirtualMachineDiskImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.diskService = client.getVapiAuthHelper().getStubFactory().createStub(Disk.class,
+				client.getSessionStubConfig());
+		this.vmService = client.getVapiAuthHelper().getStubFactory().createStub(VM.class,
 				client.getSessionStubConfig());
 	}
 
@@ -34,8 +40,8 @@ public class VirtualMachineDiskImpl extends AbstractImpl {
 		return this.diskService.list(vmId);
 	}
 	
-	public com.vmware.vcenter.vm.hardware.DiskTypes.Info get(String datacenter, String name) {
-		return this.diskService.get(datacenter, name);
+	public Collection<com.vmware.vcenter.vm.hardware.DiskTypes.Info> get(String vmId) {
+		return this.vmService.get(vmId).getDisks().values();
 	}
 
 }
