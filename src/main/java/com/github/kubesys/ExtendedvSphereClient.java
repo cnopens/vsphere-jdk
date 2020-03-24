@@ -96,20 +96,23 @@ public class ExtendedvSphereClient {
 		return new VirtualMachineNetworkImpl(this);
 	}
 	
-	public VirtualMachinePoolImpl virtualmachinenetpools() {
+	public VirtualMachinePoolImpl virtualmachinepools() {
 		return new VirtualMachinePoolImpl(this);
 	}
 	
-	public VirtualMachineDiskImpl virtualmachinenetdisks() {
+	public VirtualMachineDiskImpl virtualmachinedisks() {
 		return new VirtualMachineDiskImpl(this);
 	}
 
 	public static void main(String[] args) throws Exception {
 		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas!234");
-		System.out.println(client.virtualmachinenetpools().listDataCeneters());
-		System.out.println(client.virtualmachinenetpools().listDatastores());
-		System.out.println(client.virtualmachines().list());
-//		System.out.println(client.virtualmachines().stopVM("测试1"));
-		System.out.println(client.virtualmachinenetdisks().list("vm-15"));
+//		System.out.println(client.virtualmachinepools().listDataCeneters());
+//		System.out.println(client.virtualmachinepools().listDatastores());
+//		System.out.println(client.virtualmachines().list());
+//		System.out.println(client.virtualmachines().getVM("测试1").getDisks());
+//		System.out.println(client.virtualmachinedisks().list("vm-15"));
+//		System.out.println(client.virtualmachinedisks().get("vm-15", "2000"));
+//		System.out.println(client.virtualmachines().plugDisk("vm-15", "test2,size=10"));
+		System.out.println(client.virtualmachines().unplugDisk("vm-15", "2001"));
 	}
 }

@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.github.kubesys.ExtendedvSphereClient;
 import com.github.kubesys.models.CreateAndStartVMFromISO;
+import com.github.kubesys.models.PlugDisk;
+import com.github.kubesys.models.UnplugDisk;
 import com.github.kubesys.utils.ConvertorUtils;
 import com.vmware.vcenter.VM;
 import com.vmware.vcenter.VMTypes;
@@ -14,6 +16,8 @@ import com.vmware.vcenter.VMTypes.FilterSpec.Builder;
 import com.vmware.vcenter.VMTypes.Info;
 import com.vmware.vcenter.VMTypes.Summary;
 import com.vmware.vcenter.vm.Power;
+import com.vmware.vcenter.vm.hardware.Disk;
+import com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec;
 
 import vmware.samples.vcenter.helpers.VmHelper;
 
@@ -34,12 +38,16 @@ public class VirtualMachineImpl extends AbstractImpl {
 	protected VM vmService;
 
 	protected Power vmPowerService;
+	
+	protected Disk diskService;
 
 	public VirtualMachineImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.vmService = client.getVapiAuthHelper().getStubFactory().createStub(VM.class,
 				client.getSessionStubConfig());
 		this.vmPowerService = client.getVapiAuthHelper().getStubFactory().createStub(Power.class,
+				client.getSessionStubConfig());
+		this.diskService = client.getVapiAuthHelper().getStubFactory().createStub(Disk.class,
 				client.getSessionStubConfig());
 	}
 
@@ -115,4 +123,23 @@ public class VirtualMachineImpl extends AbstractImpl {
 		return VmHelper.getVM(client.getVapiAuthHelper().getStubFactory(), client.getSessionStubConfig(), name);
 	}
 
+	public String plugDisk(PlugDisk disk) {
+		List<CreateSpec> disks = ConvertorUtils.toDisks(disk.getDisk() + ",size=" + disk.getSize());
+		return this.diskService.create(disk.getVmid(), disks.get(0));
+	}
+	
+	public String plugDisk(String vmid, String disk) {
+		List<CreateSpec> disks = ConvertorUtils.toDisks(disk);
+		return this.diskService.create(vmid, disks.get(0));
+	}
+	
+	public boolean unplugDisk(UnplugDisk disk) {
+		this.diskService.delete(disk.getVmid(), disk.getDiskid());
+		return true;
+	}
+	
+	public boolean unplugDisk(String vmid, String diskId) {
+		this.diskService.delete(vmid, diskId);
+		return true;
+	}
 }
