@@ -133,13 +133,19 @@ public class VirtualMachineImpl extends AbstractImpl {
 		return this.diskService.create(vmid, disks.get(0));
 	}
 	
-	public boolean unplugDisk(UnplugDisk disk) {
+	public boolean deleteDisk(UnplugDisk disk) {
 		this.diskService.delete(disk.getVmid(), disk.getDiskid());
 		return true;
 	}
 	
-	public boolean unplugDisk(String vmid, String diskId) {
+	public boolean deleteDisk(String vmid, String diskId) {
 		this.diskService.delete(vmid, diskId);
+		return true;
+	}
+	
+	public boolean cloneVM(String vmid, String cloneName) {
+//		VMTypes.CloneSpec cloneSpec = new VMTypes.DiskCloneSpec().;
+//		this.vmService.clone(cloneSpec);
 		return true;
 	}
 }

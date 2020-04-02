@@ -12,6 +12,7 @@
  */
 package vmware.samples.common.authentication;
 
+import java.net.URL;
 import java.util.Map;
 
 import javax.xml.ws.BindingProvider;
@@ -41,6 +42,7 @@ public class VimAuthenticationHelper {
     private static ManagedObjectReference SVC_INST_REF =
             new ManagedObjectReference();
     public static final String VIM_PATH = "/sdk";
+    public static final String WSDL_PATH = "/sdk/vimService.wsdl";
 
     static {
         /*
@@ -61,6 +63,7 @@ public class VimAuthenticationHelper {
         String server, String username, String password) {
         try {
             String vimSdkUrl = "https://" + server + VIM_PATH;
+            String wsdlUrl = "https://" + server + WSDL_PATH;
 
             /*
              * Create a VimService object to obtain a VimPort binding provider.
@@ -68,7 +71,7 @@ public class VimAuthenticationHelper {
              * in request/response messages. Retrieve the request context
              * which will be used for processing message requests.
              */
-            this.vimService = new VimService();
+            this.vimService = new VimService(new URL(wsdlUrl));
             this.vimPort = vimService.getVimPort();
             Map<String, Object> ctxt =
                     ((BindingProvider) vimPort).getRequestContext();

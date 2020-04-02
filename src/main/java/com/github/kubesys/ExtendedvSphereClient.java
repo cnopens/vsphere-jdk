@@ -113,6 +113,7 @@ public class ExtendedvSphereClient {
 //		System.out.println(client.virtualmachinedisks().list("vm-15"));
 //		System.out.println(client.virtualmachinedisks().get("vm-15", "2000"));
 //		System.out.println(client.virtualmachines().plugDisk("vm-15", "test2,size=10"));
-		System.out.println(client.virtualmachines().unplugDisk("vm-15", "2001"));
+//		System.out.println(client.virtualmachines().deleteDisk("vm-15", "2001"));
+		System.out.println(client.virtualmachines().cloneVM("vm-15", "clone"));
 	}
 }
