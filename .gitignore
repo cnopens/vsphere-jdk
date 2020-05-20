@@ -30,4 +30,5 @@ hs_err_pid*
 
 # IDEA
 .idea
-kubernetes-client.iml
+*.iml
+
