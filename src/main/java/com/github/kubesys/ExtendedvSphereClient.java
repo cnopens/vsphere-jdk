@@ -109,11 +109,15 @@ public class ExtendedvSphereClient {
 //		System.out.println(client.virtualmachinepools().listDataCeneters());
 //		System.out.println(client.virtualmachinepools().listDatastores());
 //		System.out.println(client.virtualmachines().list());
+//		System.out.println(client.virtualmachines().getVMById("vm-12"));
 //		System.out.println(client.virtualmachines().getVM("测试1").getDisks());
-//		System.out.println(client.virtualmachinedisks().list("vm-15"));
+//		System.out.println(client.virtualmachinedisks().list("vm-12"));
 //		System.out.println(client.virtualmachinedisks().get("vm-15", "2000"));
 //		System.out.println(client.virtualmachines().plugDisk("vm-15", "test2,size=10"));
 //		System.out.println(client.virtualmachines().deleteDisk("vm-15", "2001"));
-		System.out.println(client.virtualmachines().cloneVM("vm-15", "clone"));
+		//System.out.println(client.virtualmachines().cloneVM("vm-15", "clone"));
+		//System.out.println(client.virtualmachines().setVMResource("vm-15", "));
+		// System.out.println(client.virtualmachines().setCPU("vm-12", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
+		System.out.println(client.virtualmachines().setMemory("vm-12", 11*1024l)); // 在虚拟机运行使改变CPU内存只能将数值调大
 	}
 }

@@ -16,9 +16,10 @@ import com.vmware.vcenter.VMTypes.FilterSpec.Builder;
 import com.vmware.vcenter.VMTypes.Info;
 import com.vmware.vcenter.VMTypes.Summary;
 import com.vmware.vcenter.vm.Power;
-import com.vmware.vcenter.vm.hardware.Disk;
+import com.vmware.vcenter.vm.hardware.*;
 import com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec;
 
+import sun.plugin2.gluegen.runtime.CPU;
 import vmware.samples.vcenter.helpers.VmHelper;
 
 /**
@@ -41,6 +42,10 @@ public class VirtualMachineImpl extends AbstractImpl {
 	
 	protected Disk diskService;
 
+	protected Cpu cpuService;
+
+	protected Memory memoryService;
+
 	public VirtualMachineImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.vmService = client.getVapiAuthHelper().getStubFactory().createStub(VM.class,
@@ -48,6 +53,10 @@ public class VirtualMachineImpl extends AbstractImpl {
 		this.vmPowerService = client.getVapiAuthHelper().getStubFactory().createStub(Power.class,
 				client.getSessionStubConfig());
 		this.diskService = client.getVapiAuthHelper().getStubFactory().createStub(Disk.class,
+				client.getSessionStubConfig());
+		this.cpuService = client.getVapiAuthHelper().getStubFactory().createStub(Cpu.class,
+				client.getSessionStubConfig());
+		this.memoryService = client.getVapiAuthHelper().getStubFactory().createStub(Memory.class,
 				client.getSessionStubConfig());
 	}
 
@@ -146,6 +155,31 @@ public class VirtualMachineImpl extends AbstractImpl {
 	public boolean cloneVM(String vmid, String cloneName) {
 //		VMTypes.CloneSpec cloneSpec = new VMTypes.DiskCloneSpec().;
 //		this.vmService.clone(cloneSpec);
+		return true;
+	}
+
+	public boolean setCPU(String vmid, Long cpuCount) {
+		// CPU UpdateSpec, for example 1l
+		CpuTypes.UpdateSpec cpuUpdateSpec =
+				new CpuTypes.UpdateSpec.Builder().setCoresPerSocket(1l)
+						.setCount(cpuCount)
+						.setHotAddEnabled(true)
+						.setHotRemoveEnabled(true)
+						.build();
+
+		cpuService.update(vmid, cpuUpdateSpec);
+		System.out.println("The CPU count of VM " + vmid + " now is" + cpuCount);
+		return true;
+	}
+
+	public boolean setMemory(String vmid, Long memoryCount) {
+		// Memory UpdateSpec, for example 2 * 1024l
+		MemoryTypes.UpdateSpec memoryUpdateSpec =
+				new MemoryTypes.UpdateSpec.Builder().setSizeMiB(memoryCount)
+						.setHotAddEnabled(true)
+						.build();
+		memoryService.update(vmid, memoryUpdateSpec);
+		System.out.println("The memory count of VM " + vmid + " now is" + memoryCount);
 		return true;
 	}
 }
