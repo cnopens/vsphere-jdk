@@ -3,11 +3,8 @@
  */
 package com.github.kubesys.impls;
 
-import java.util.List;
-
 import com.github.kubesys.ExtendedvSphereClient;
-import com.vmware.vcenter.vm.hardware.Disk;
-import com.vmware.vcenter.vm.hardware.DiskTypes.Info;
+import com.vmware.vcenter.vm_template.LibraryItems;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -21,22 +18,19 @@ import com.vmware.vcenter.vm.hardware.DiskTypes.Info;
  *        VirtualMachineImage, VirtualMachineSnapshot, VirtualMachineNetwork
  * 
  */
-public class VirtualMachineDiskImpl extends AbstractImpl {
+public class VirtualMachineImageImpl extends AbstractImpl {
 
-	protected Disk diskService;
-	
-	public VirtualMachineDiskImpl(ExtendedvSphereClient client) {
+	protected LibraryItems templateService;
+
+	public VirtualMachineImageImpl(ExtendedvSphereClient client) {
 		super(client);
-		this.diskService = client.getVapiAuthHelper().getStubFactory().createStub(Disk.class,
+		this.templateService = client.getVapiAuthHelper().getStubFactory().createStub(LibraryItems.class,
 				client.getSessionStubConfig());
+		
 	}
 
-	public List<com.vmware.vcenter.vm.hardware.DiskTypes.Summary> list(String vmId) {
-		return this.diskService.list(vmId);
-	}
-	
-	public Info get(String vmid, String diskId) {
-		return this.diskService.get(vmid, diskId);
+	public com.vmware.vcenter.vm_template.LibraryItemsTypes.Info getTemplate(String name) {
+		return this.templateService.get(name);
 	}
 
 }

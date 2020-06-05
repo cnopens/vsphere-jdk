@@ -107,8 +107,13 @@ public class ExtendedvSphereClient {
 	public static void main(String[] args) throws Exception {
 		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas!234");
 //		System.out.println(client.virtualmachinepools().listDataCeneters());
-//		System.out.println(client.virtualmachinepools().listDatastores());
-//		System.out.println(client.virtualmachines().list());
+//		System.out.println(client.virtualmachinepools().getDataCeneter("datacenter-2"));
+		System.out.println(client.virtualmachinepools().listDatastores());
+//		System.out.println(client.virtualmachinepools().getDatastore("datastore-10"));
+		System.out.println(client.virtualmachinepools().listClusters());
+		System.out.println(client.virtualmachinepools().getCluster("domain-c16"));
+		System.out.println(client.virtualmachines().list());
+//		System.out.println(client.virtualmachines().stopVMById("vm-12"));
 //		System.out.println(client.virtualmachines().getVMById("vm-12"));
 //		System.out.println(client.virtualmachines().getVM("测试1").getDisks());
 //		System.out.println(client.virtualmachinedisks().list("vm-12"));
@@ -117,7 +122,7 @@ public class ExtendedvSphereClient {
 //		System.out.println(client.virtualmachines().deleteDisk("vm-15", "2001"));
 		//System.out.println(client.virtualmachines().cloneVM("vm-15", "clone"));
 		//System.out.println(client.virtualmachines().setVMResource("vm-15", "));
-		// System.out.println(client.virtualmachines().setCPU("vm-12", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
-		System.out.println(client.virtualmachines().setMemory("vm-12", 11*1024l)); // 在虚拟机运行使改变CPU内存只能将数值调大
+		 System.out.println(client.virtualmachines().setCPU("vm-12", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
+		System.out.println(client.virtualmachines().setMemory("vm-12", 8*1024l)); // 在虚拟机运行使改变CPU内存只能将数值调大
 	}
 }

@@ -19,7 +19,6 @@ import com.vmware.vcenter.vm.Power;
 import com.vmware.vcenter.vm.hardware.*;
 import com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec;
 
-import sun.plugin2.gluegen.runtime.CPU;
 import vmware.samples.vcenter.helpers.VmHelper;
 
 /**

@@ -11,6 +11,7 @@ import com.vmware.vcenter.Datacenter;
 import com.vmware.vcenter.Datastore;
 import com.vmware.vcenter.Folder;
 import com.vmware.vcenter.Host;
+import com.vmware.vcenter.ResourcePool;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -36,6 +37,8 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	
 	protected Folder folderService;
 	
+	protected ResourcePool resourcePoolService;
+	
 	public VirtualMachinePoolImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.datacneterService = client.getVapiAuthHelper().getStubFactory().createStub(Datacenter.class,
@@ -47,6 +50,8 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		this.hostService = client.getVapiAuthHelper().getStubFactory().createStub(Host.class,
 				client.getSessionStubConfig());
 		this.folderService = client.getVapiAuthHelper().getStubFactory().createStub(Folder.class,
+				client.getSessionStubConfig());
+		this.resourcePoolService  = client.getVapiAuthHelper().getStubFactory().createStub(ResourcePool.class,
 				client.getSessionStubConfig());
 	}
 
@@ -85,6 +90,15 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	public List<com.vmware.vcenter.FolderTypes.Summary> listFolders() {
 		com.vmware.vcenter.FolderTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.FolderTypes.FilterSpec.Builder();
 		return this.folderService.list(brdl.build());
+	}
+	
+	public List<com.vmware.vcenter.ResourcePool.Summary> listPools() {
+		com.vmware.vcenter.ResourcePool.FilterSpec.Builder brdl = new com.vmware.vcenter.ResourcePool.FilterSpec.Builder();
+		return this.resourcePoolService.list(brdl.build());
+	}
+	
+	public com.vmware.vcenter.ResourcePoolTypes.Info getPool(String id) {
+		return this.resourcePoolService.get(id);
 	}
 	
 }
