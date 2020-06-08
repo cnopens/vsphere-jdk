@@ -8,6 +8,7 @@ import java.util.List;
 import com.github.kubesys.ExtendedvSphereClient;
 import com.github.kubesys.models.CreateAndStartVMFromISO;
 import com.github.kubesys.models.PlugDisk;
+import com.github.kubesys.models.PlugNIC;
 import com.github.kubesys.models.UnplugDisk;
 import com.github.kubesys.utils.ConvertorUtils;
 import com.vmware.vcenter.VM;
@@ -16,8 +17,12 @@ import com.vmware.vcenter.VMTypes.FilterSpec.Builder;
 import com.vmware.vcenter.VMTypes.Info;
 import com.vmware.vcenter.VMTypes.Summary;
 import com.vmware.vcenter.vm.Power;
-import com.vmware.vcenter.vm.hardware.*;
-import com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec;
+import com.vmware.vcenter.vm.hardware.Cpu;
+import com.vmware.vcenter.vm.hardware.CpuTypes;
+import com.vmware.vcenter.vm.hardware.Disk;
+import com.vmware.vcenter.vm.hardware.Ethernet;
+import com.vmware.vcenter.vm.hardware.Memory;
+import com.vmware.vcenter.vm.hardware.MemoryTypes;
 
 import vmware.samples.vcenter.helpers.VmHelper;
 
@@ -44,6 +49,8 @@ public class VirtualMachineImpl extends AbstractImpl {
 	protected Cpu cpuService;
 
 	protected Memory memoryService;
+	
+	protected Ethernet ethernetService;
 
 	public VirtualMachineImpl(ExtendedvSphereClient client) {
 		super(client);
@@ -57,6 +64,9 @@ public class VirtualMachineImpl extends AbstractImpl {
 				client.getSessionStubConfig());
 		this.memoryService = client.getVapiAuthHelper().getStubFactory().createStub(Memory.class,
 				client.getSessionStubConfig());
+		this.ethernetService = client.getVapiAuthHelper().getStubFactory().createStub(Ethernet.class,
+				client.getSessionStubConfig());
+		
 	}
 
 	public List<Summary> list() {
@@ -131,16 +141,21 @@ public class VirtualMachineImpl extends AbstractImpl {
 		return VmHelper.getVM(client.getVapiAuthHelper().getStubFactory(), client.getSessionStubConfig(), name);
 	}
 
-	public String plugDisk(PlugDisk disk) {
-		List<CreateSpec> disks = ConvertorUtils.toDisks(disk.getDisk() + ",size=" + disk.getSize());
-		return this.diskService.create(disk.getVmid(), disks.get(0));
-	}
-	
-	public String plugDisk(String vmid, String disk) {
-		List<CreateSpec> disks = ConvertorUtils.toDisks(disk);
+	public String plugDisk(String vmid, PlugDisk disk) {
+		List<com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec> disks = ConvertorUtils.toDisks(disk.getDisk() + ",size=" + disk.getSize());
 		return this.diskService.create(vmid, disks.get(0));
 	}
 	
+	public String plugDisk(String vmid, String disk) {
+		List<com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec> disks = ConvertorUtils.toDisks(disk);
+		return this.diskService.create(vmid, disks.get(0));
+	}
+	
+	public String plugNIC(String vmid, PlugNIC nic) {
+		List<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec> disks = ConvertorUtils.toNICs(nic.getDisk() + ",size=" + nic.getSize());
+		return this.ethernetService.create(vmid, disks.get(0));
+	}
+
 	public boolean deleteDisk(UnplugDisk disk) {
 		this.diskService.delete(disk.getVmid(), disk.getDiskid());
 		return true;
@@ -167,7 +182,6 @@ public class VirtualMachineImpl extends AbstractImpl {
 						.build();
 
 		cpuService.update(vmid, cpuUpdateSpec);
-		System.out.println("The CPU count of VM " + vmid + " now is" + cpuCount);
 		return true;
 	}
 
@@ -178,7 +192,6 @@ public class VirtualMachineImpl extends AbstractImpl {
 						.setHotAddEnabled(true)
 						.build();
 		memoryService.update(vmid, memoryUpdateSpec);
-		System.out.println("The memory count of VM " + vmid + " now is" + memoryCount);
 		return true;
 	}
 }

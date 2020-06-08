@@ -3,12 +3,15 @@
  */
 package com.github.kubesys.impls;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.github.kubesys.ExtendedvSphereClient;
 import com.vmware.vcenter.Cluster;
 import com.vmware.vcenter.Datacenter;
 import com.vmware.vcenter.Datastore;
+import com.vmware.vcenter.Deployment;
 import com.vmware.vcenter.Folder;
 import com.vmware.vcenter.Host;
 import com.vmware.vcenter.ResourcePool;
@@ -39,6 +42,8 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	
 	protected ResourcePool resourcePoolService;
 	
+	protected Deployment deploymentService;
+	
 	public VirtualMachinePoolImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.datacneterService = client.getVapiAuthHelper().getStubFactory().createStub(Datacenter.class,
@@ -52,6 +57,8 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		this.folderService = client.getVapiAuthHelper().getStubFactory().createStub(Folder.class,
 				client.getSessionStubConfig());
 		this.resourcePoolService  = client.getVapiAuthHelper().getStubFactory().createStub(ResourcePool.class,
+				client.getSessionStubConfig());
+		this.deploymentService  = client.getVapiAuthHelper().getStubFactory().createStub(Deployment.class,
 				client.getSessionStubConfig());
 	}
 
@@ -87,12 +94,19 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		return this.hostService.list(brdl.build());
 	}
 	
+	public List<com.vmware.vcenter.HostTypes.Summary> listHosts(String cluster) {
+		com.vmware.vcenter.HostTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.HostTypes.FilterSpec.Builder();
+		Set<String> names = new HashSet<String>();
+		names.add(cluster);
+		return this.hostService.list(brdl.setClusters(names).build());
+	}
+	
 	public List<com.vmware.vcenter.FolderTypes.Summary> listFolders() {
 		com.vmware.vcenter.FolderTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.FolderTypes.FilterSpec.Builder();
 		return this.folderService.list(brdl.build());
 	}
 	
-	public List<com.vmware.vcenter.ResourcePool.Summary> listPools() {
+	public List<com.vmware.vcenter.ResourcePoolTypes.Summary> listPools() {
 		com.vmware.vcenter.ResourcePool.FilterSpec.Builder brdl = new com.vmware.vcenter.ResourcePool.FilterSpec.Builder();
 		return this.resourcePoolService.list(brdl.build());
 	}

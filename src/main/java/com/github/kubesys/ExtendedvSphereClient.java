@@ -105,14 +105,40 @@ public class ExtendedvSphereClient {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas!234");
+		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas2020!234");
 //		System.out.println(client.virtualmachinepools().listDataCeneters());
 //		System.out.println(client.virtualmachinepools().getDataCeneter("datacenter-2"));
-		System.out.println(client.virtualmachinepools().listDatastores());
+//		System.out.println(client.virtualmachinepools().listDatastores());
 //		System.out.println(client.virtualmachinepools().getDatastore("datastore-10"));
-		System.out.println(client.virtualmachinepools().listClusters());
-		System.out.println(client.virtualmachinepools().getCluster("domain-c16"));
-		System.out.println(client.virtualmachines().list());
+//		System.out.println(client.virtualmachinepools().listClusters());
+//		System.out.println(client.virtualmachinepools().getCluster("domain-c16"));
+//		System.out.println(client.virtualmachinepools().getPool("resgroup-17"));
+		System.out.println(client.virtualmachinepools().listHosts("domain-c16"));
+		
+		
+		String hostName = "192.168.1.50";
+        HostSystem host = null;
+        try {
+            host = (HostSystem) new InventoryNavigator(rootFolder).searchManagedEntity("HostSystem", hostName);
+        } catch ( Exception e )
+        {System.out.println( e.toString() ) ; }
+       
+        if(host==null)
+            {
+              System.out.println("Host not found");
+              si.getServerConnection().logout();
+              return;
+            }
+//I think here is where i'm missing something important.
+
+       HostHardwareInfo hostHS = new HostHardwareInfo();
+
+       System.out.println ("Host memory: " + hostHS.getMemorySize( ) );
+       System.out.println ("CPU Features: " + hostHS.getCpuFeature( ) );
+		
+//		System.out.println(client.virtualmachinepools().listPools());
+//		System.out.println(client.virtualmachinepools().listFolders());
+//		System.out.println(client.virtualmachines().list());
 //		System.out.println(client.virtualmachines().stopVMById("vm-12"));
 //		System.out.println(client.virtualmachines().getVMById("vm-12"));
 //		System.out.println(client.virtualmachines().getVM("测试1").getDisks());
@@ -122,7 +148,9 @@ public class ExtendedvSphereClient {
 //		System.out.println(client.virtualmachines().deleteDisk("vm-15", "2001"));
 		//System.out.println(client.virtualmachines().cloneVM("vm-15", "clone"));
 		//System.out.println(client.virtualmachines().setVMResource("vm-15", "));
-		 System.out.println(client.virtualmachines().setCPU("vm-12", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
-		System.out.println(client.virtualmachines().setMemory("vm-12", 8*1024l)); // 在虚拟机运行使改变CPU内存只能将数值调大
+//		System.out.println(client.virtualmachines().getVMById("vm-21"));
+//		System.out.println(client.virtualmachines().stopVMById("vm-21"));
+//		 System.out.println(client.virtualmachines().setCPU("vm-21", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
+//		System.out.println(client.virtualmachines().setMemory("vm-21", 8*1024l)); // 在虚拟机运行使改变CPU内存只能将数值调大
 	}
 }
