@@ -70,6 +70,7 @@ public class ExtendedvSphereClient {
         this.vimPort = connection.getVimPort();
         this.serviceContent = connection.getServiceContent();
         this.rootRef = serviceContent.getRootFolder();
+        
 	}
 	
 	public void close() throws Exception {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.kubesys.ExtendedvSphereClient;
+import com.vmware.vapi.bindings.client.InvocationConfig;
 import com.vmware.vcenter.Cluster;
 import com.vmware.vcenter.Datacenter;
 import com.vmware.vcenter.Datastore;
@@ -15,6 +16,8 @@ import com.vmware.vcenter.Deployment;
 import com.vmware.vcenter.Folder;
 import com.vmware.vcenter.Host;
 import com.vmware.vcenter.ResourcePool;
+import com.vmware.vstats.Data;
+import com.vmware.vstats.Metrics;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -44,6 +47,11 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	
 	protected Deployment deploymentService;
 	
+	protected Metrics metricsService;
+	
+	protected Data dataService;
+	
+	
 	public VirtualMachinePoolImpl(ExtendedvSphereClient client) {
 		super(client);
 		this.datacneterService = client.getVapiAuthHelper().getStubFactory().createStub(Datacenter.class,
@@ -59,6 +67,10 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		this.resourcePoolService  = client.getVapiAuthHelper().getStubFactory().createStub(ResourcePool.class,
 				client.getSessionStubConfig());
 		this.deploymentService  = client.getVapiAuthHelper().getStubFactory().createStub(Deployment.class,
+				client.getSessionStubConfig());
+		this.metricsService  = client.getVapiAuthHelper().getStubFactory().createStub(Metrics.class,
+				client.getSessionStubConfig());
+		this.dataService = client.getVapiAuthHelper().getStubFactory().createStub(Data.class,
 				client.getSessionStubConfig());
 	}
 
@@ -96,10 +108,11 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	
 	public List<com.vmware.vcenter.HostTypes.Summary> listHosts(String cluster) {
 		com.vmware.vcenter.HostTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.HostTypes.FilterSpec.Builder();
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		names.add(cluster);
 		return this.hostService.list(brdl.setClusters(names).build());
 	}
+	
 	
 	public List<com.vmware.vcenter.FolderTypes.Summary> listFolders() {
 		com.vmware.vcenter.FolderTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.FolderTypes.FilterSpec.Builder();
@@ -113,6 +126,14 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	
 	public com.vmware.vcenter.ResourcePoolTypes.Info getPool(String id) {
 		return this.resourcePoolService.get(id);
+	}
+	
+	public com.vmware.vcenter.ResourcePoolTypes.Info getPool(String id, InvocationConfig ic) {
+		return this.resourcePoolService.get(id, ic);
+	}
+	
+	public List<com.vmware.vstats.MetricsTypes.Summary> listMetrics() {
+		return this.metricsService.list();
 	}
 	
 }

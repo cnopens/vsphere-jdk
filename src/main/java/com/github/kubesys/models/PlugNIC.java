@@ -7,40 +7,44 @@ import com.github.kubesys.utils.RegExpUtils;
 
 public class PlugNIC {
 
-	@ParameterDescriber(required = false, description = "虚拟机名", constraint = "取值范围：none, writethrough, directsync, unsafe, writeback", example = "none")
-	@Pattern(regexp = RegExpUtils.NAME_PATTERN)
-	protected String vmid;
+	@ParameterDescriber(required = true, description = "虚拟机网络", constraint = "type=l2bridge/l3bridge,source=交换机名（必填）mac=mac地址（选填），"
+			+ "参数顺序必须是type,source,mac", example = "type=l2bridge,source=br-int,mac=00:00:00:00:00:00")
+	@Pattern(regexp = RegExpUtils.NETWORK_TYPE_PATTERN)
+	protected String network;
+	
+	protected String type;
+	
+	protected String source;
+	
+	protected String mac;
 
-	@Pattern(regexp = RegExpUtils.NAME_PATTERN)
-	@ParameterDescriber(required = false, description = "磁盘名", constraint = "0~99999", example = "40000")
-	protected String disk;
-
-	@Pattern(regexp = RegExpUtils.DISK_SIZE_KIB_PATTERN)
-	@ParameterDescriber(required = false, description = "磁盘大小，单位10G", constraint = "0~99999", example = "40000")
-	protected String size;
-
-	public String getVmid() {
-		return vmid;
+	public String getType() {
+		return "type=" + type;
 	}
 
-	public void setVmid(String vmid) {
-		this.vmid = vmid;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getDisk() {
-		return disk;
+	public String getSource() {
+		return "source=" + source;
 	}
 
-	public void setDisk(String disk) {
-		this.disk = disk;
+	public void setSource(String source) {
+		this.source = source;
 	}
 
-	public String getSize() {
-		return size;
+	public String getMac() {
+		return "mac=" + mac;
 	}
 
-	public void setSize(String size) {
-		this.size = size;
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
+
+	@Override
+	public String toString() {
+		return getType() + "," + getSource() + "," + getMac();
 	}
 	
 }

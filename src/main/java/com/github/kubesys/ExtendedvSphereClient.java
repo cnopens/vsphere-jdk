@@ -10,9 +10,12 @@ import com.github.kubesys.impls.VirtualMachineDiskImpl;
 import com.github.kubesys.impls.VirtualMachineImpl;
 import com.github.kubesys.impls.VirtualMachineNetworkImpl;
 import com.github.kubesys.impls.VirtualMachinePoolImpl;
+import com.vmware.nsx.model.ClusterProfile;
 import com.vmware.vapi.bindings.StubConfiguration;
+import com.vmware.vapi.bindings.client.InvocationConfig;
 import com.vmware.vapi.protocol.HttpConfiguration;
 import com.vmware.vapi.protocol.HttpConfiguration.SslConfiguration;
+import com.vmware.vim25.ManagedObjectReference;
 
 import vmware.samples.common.SslUtil;
 import vmware.samples.common.authentication.VapiAuthenticationHelper;
@@ -48,13 +51,15 @@ public class ExtendedvSphereClient {
 		this.vapiAuthHelper = new VapiAuthenticationHelper();
 		this.vimAuthHelper = new VimAuthenticationHelper();
 		HttpConfiguration httpConfig = buildHttpConfiguration();
-		this.sessionStubConfig = vapiAuthHelper.loginByUsernameAndPassword(server, username, password, httpConfig);
+		this.sessionStubConfig = vapiAuthHelper
+				.loginByUsernameAndPassword(server, username, password, httpConfig);
 		this.vimAuthHelper.loginByUsernameAndPassword(server, username, password);
 	}
 
 	protected HttpConfiguration buildHttpConfiguration() throws Exception {
-		HttpConfiguration httpConfig = new HttpConfiguration.Builder().setSslConfiguration(buildSslConfiguration())
-				.getConfig();
+		HttpConfiguration httpConfig = new HttpConfiguration.Builder()
+					.setSslConfiguration(buildSslConfiguration())
+					.getConfig();
 
 		return httpConfig;
 	}
@@ -106,37 +111,31 @@ public class ExtendedvSphereClient {
 
 	public static void main(String[] args) throws Exception {
 		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas2020!234");
+
+		ClusterProfile clusterProfile = new ClusterProfile();
+		//		
+	
 //		System.out.println(client.virtualmachinepools().listDataCeneters());
+//		System.out.println(client.virtualmachinepools().listMetrics());
 //		System.out.println(client.virtualmachinepools().getDataCeneter("datacenter-2"));
 //		System.out.println(client.virtualmachinepools().listDatastores());
 //		System.out.println(client.virtualmachinepools().getDatastore("datastore-10"));
-//		System.out.println(client.virtualmachinepools().listClusters());
-//		System.out.println(client.virtualmachinepools().getCluster("domain-c16"));
+		System.out.println(client.virtualmachinepools().listClusters());
+		System.out.println(client.virtualmachinepools().getCluster("domain-c16").getResourcePool());
+		System.out.println(client.virtualmachinepools().listPools());
+		System.out.println(client.virtualmachinepools().getPool("resgroup-17"));
 //		System.out.println(client.virtualmachinepools().getPool("resgroup-17"));
-		System.out.println(client.virtualmachinepools().listHosts("domain-c16"));
+//		System.out.println(client.virtualmachinepools().listHosts("domain-c16"));
+//		System.out.println(client.virtualmachinepools().listFolders());
+//		System.out.println(client.virtualmachinenetworks().list());
 		
+//		System.out.println(NetworkHelper.getStandardNetworkBacking(
+//				client.getVapiAuthHelper().getStubFactory(), 
+//				client.getSessionStubConfig(), 
+//				"Datacenter",
+//				"VM Network"));
 		
-		String hostName = "192.168.1.50";
-        HostSystem host = null;
-        try {
-            host = (HostSystem) new InventoryNavigator(rootFolder).searchManagedEntity("HostSystem", hostName);
-        } catch ( Exception e )
-        {System.out.println( e.toString() ) ; }
-       
-        if(host==null)
-            {
-              System.out.println("Host not found");
-              si.getServerConnection().logout();
-              return;
-            }
-//I think here is where i'm missing something important.
-
-       HostHardwareInfo hostHS = new HostHardwareInfo();
-
-       System.out.println ("Host memory: " + hostHS.getMemorySize( ) );
-       System.out.println ("CPU Features: " + hostHS.getCpuFeature( ) );
-		
-//		System.out.println(client.virtualmachinepools().listPools());
+		//		System.out.println(client.virtualmachinepools().listPools());
 //		System.out.println(client.virtualmachinepools().listFolders());
 //		System.out.println(client.virtualmachines().list());
 //		System.out.println(client.virtualmachines().stopVMById("vm-12"));
@@ -148,9 +147,13 @@ public class ExtendedvSphereClient {
 //		System.out.println(client.virtualmachines().deleteDisk("vm-15", "2001"));
 		//System.out.println(client.virtualmachines().cloneVM("vm-15", "clone"));
 		//System.out.println(client.virtualmachines().setVMResource("vm-15", "));
+ 
+//		PlugNIC nic = new PlugNIC();
+//		nic.setType("l2bridge");
+//		System.out.println(client.virtualmachines().plugNIC("network-11", nic));
 //		System.out.println(client.virtualmachines().getVMById("vm-21"));
 //		System.out.println(client.virtualmachines().stopVMById("vm-21"));
-//		 System.out.println(client.virtualmachines().setCPU("vm-21", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
+//		System.out.println(client.virtualmachines().setCPU("vm-21", 2l)); // 在虚拟机运行使改变CPU内存只能将数值调大
 //		System.out.println(client.virtualmachines().setMemory("vm-21", 8*1024l)); // 在虚拟机运行使改变CPU内存只能将数值调大
 	}
 }

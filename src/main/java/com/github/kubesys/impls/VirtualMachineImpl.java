@@ -24,6 +24,7 @@ import com.vmware.vcenter.vm.hardware.Ethernet;
 import com.vmware.vcenter.vm.hardware.Memory;
 import com.vmware.vcenter.vm.hardware.MemoryTypes;
 
+import vmware.samples.vcenter.helpers.NetworkHelper;
 import vmware.samples.vcenter.helpers.VmHelper;
 
 /**
@@ -123,13 +124,18 @@ public class VirtualMachineImpl extends AbstractImpl {
 
 	public boolean createAndStartVMFromISO(String name, String datacenterName, String clusterName, String datastoreName,
 			String hostName, String vmFolderName, CreateAndStartVMFromISO createAndStartVMFromISO) throws Exception {
+		
+		String standardNetworkBacking = NetworkHelper.getStandardNetworkBacking(
+				client.getVapiAuthHelper().getStubFactory(), client.getSessionStubConfig(), datacenterName,
+				ConvertorUtils.getSwitch(createAndStartVMFromISO.getNetwork()));
+		
 		VMTypes.CreateSpec vmCreateSpec = new VMTypes.CreateSpec.Builder(createAndStartVMFromISO.getOs_variant())
 				.setName(name).setBootDevices(ConvertorUtils.toBoots(createAndStartVMFromISO.getBoot()))
 				.setCpu(ConvertorUtils.toCPUs(createAndStartVMFromISO.getVcpus()))
 				.setMemory(ConvertorUtils.toRAMs(createAndStartVMFromISO.getMemory()))
 				.setPlacement(ConvertorUtils.toPlacement(client, hostName, clusterName, datacenterName, vmFolderName,
 						datastoreName))
-				.setNics(ConvertorUtils.toNICs(client, datacenterName, createAndStartVMFromISO.getNetwork()))
+				.setNics(ConvertorUtils.toNICs(standardNetworkBacking, createAndStartVMFromISO.getNetwork()))
 				.setDisks(ConvertorUtils.toDisks(createAndStartVMFromISO.getDisk()))
 				.setCdroms(ConvertorUtils.toCDRom(createAndStartVMFromISO.getCdrom())).build();
 		String basicVMId = vmService.create(vmCreateSpec);
@@ -151,9 +157,9 @@ public class VirtualMachineImpl extends AbstractImpl {
 		return this.diskService.create(vmid, disks.get(0));
 	}
 	
-	public String plugNIC(String vmid, PlugNIC nic) {
-		List<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec> disks = ConvertorUtils.toNICs(nic.getDisk() + ",size=" + nic.getSize());
-		return this.ethernetService.create(vmid, disks.get(0));
+	public String plugNIC(String standardNetworkBacking, PlugNIC nic) {
+		List<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec> nics = ConvertorUtils.toNICs(standardNetworkBacking, nic.toString());
+		return this.ethernetService.create(standardNetworkBacking, nics.get(0));
 	}
 
 	public boolean deleteDisk(UnplugDisk disk) {

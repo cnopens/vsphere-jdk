@@ -48,28 +48,8 @@ public class ConvertorUtils {
 		return list;
 	}
 	
-	public static List<com.vmware.vcenter.vm.hardware.Ethernet.CreateSpec> toNICs(String nicsStr) {
-		List<com.vmware.vcenter.vm.hardware.Ethernet.CreateSpec> list = new ArrayList<com.vmware.vcenter.vm.hardware.Ethernet.CreateSpec>();
-//		for (String diskDesc : nicsStr.split("--disk")) {
-//			com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec.Builder disk = new com.vmware.vcenter.vm.hardware.DiskTypes.CreateSpec.Builder();
-//			com.vmware.vcenter.vm.hardware.DiskTypes.VmdkCreateSpec.Builder newVmdk = new com.vmware.vcenter.vm.hardware.DiskTypes.VmdkCreateSpec.Builder();
-//			String[] descs = diskDesc.trim().split(",");
-//			newVmdk.setName(descs[0]);
-//			if (descs[1].trim().startsWith("size=")) {
-//				newVmdk.setCapacity(GB * Long.parseLong(descs[1].split("=")[1].trim()));
-//			}
-//			disk.setNewVmdk(newVmdk.build());
-//			list.add(disk.build());
-//		}
-		return list;
-	}
 
-	public static List<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec> toNICs(ExtendedvSphereClient client,
-			String datacenterName, String nicsStr) {
-
-		String standardNetworkBacking = NetworkHelper.getStandardNetworkBacking(
-				client.getVapiAuthHelper().getStubFactory(), client.getSessionStubConfig(), datacenterName,
-				getSwitch(nicsStr));
+	public static List<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec> toNICs(String standardNetworkBacking, String nicsStr) {
 
 		List<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec> list = new ArrayList<com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec>();
 		com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec nic = new com.vmware.vcenter.vm.hardware.EthernetTypes.CreateSpec();
@@ -127,7 +107,7 @@ public class ConvertorUtils {
 				.build();
 	}
 
-	protected static String getSwitch(String desc) {
+	public static String getSwitch(String desc) {
 		for (String pair : desc.split(",")) {
 			if (pair.startsWith("source=")) {
 				return pair.split("=")[1].trim();
