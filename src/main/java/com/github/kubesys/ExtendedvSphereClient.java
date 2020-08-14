@@ -10,12 +10,9 @@ import com.github.kubesys.impls.VirtualMachineDiskImpl;
 import com.github.kubesys.impls.VirtualMachineImpl;
 import com.github.kubesys.impls.VirtualMachineNetworkImpl;
 import com.github.kubesys.impls.VirtualMachinePoolImpl;
-import com.vmware.nsx.model.ClusterProfile;
 import com.vmware.vapi.bindings.StubConfiguration;
-import com.vmware.vapi.bindings.client.InvocationConfig;
 import com.vmware.vapi.protocol.HttpConfiguration;
 import com.vmware.vapi.protocol.HttpConfiguration.SslConfiguration;
-import com.vmware.vim25.ManagedObjectReference;
 
 import vmware.samples.common.SslUtil;
 import vmware.samples.common.authentication.VapiAuthenticationHelper;
@@ -112,18 +109,17 @@ public class ExtendedvSphereClient {
 	public static void main(String[] args) throws Exception {
 		ExtendedvSphereClient client = new ExtendedvSphereClient("133.133.135.35", "administrator@vsphere.test", "Onceas2020!234");
 
-		ClusterProfile clusterProfile = new ClusterProfile();
-		//		
-	
+		
 //		System.out.println(client.virtualmachinepools().listDataCeneters());
 //		System.out.println(client.virtualmachinepools().listMetrics());
 //		System.out.println(client.virtualmachinepools().getDataCeneter("datacenter-2"));
 //		System.out.println(client.virtualmachinepools().listDatastores());
 //		System.out.println(client.virtualmachinepools().getDatastore("datastore-10"));
 		System.out.println(client.virtualmachinepools().listClusters());
-		System.out.println(client.virtualmachinepools().getCluster("domain-c16").getResourcePool());
+		System.out.println(client.virtualmachinepools().getCluster("domain-c16"));
 		System.out.println(client.virtualmachinepools().listPools());
-		System.out.println(client.virtualmachinepools().getPool("resgroup-17"));
+		System.out.println(client.virtualmachinepools().getPool("resgroup-26").getCpuAllocation().getReservation());
+		
 //		System.out.println(client.virtualmachinepools().getPool("resgroup-17"));
 //		System.out.println(client.virtualmachinepools().listHosts("domain-c16"));
 //		System.out.println(client.virtualmachinepools().listFolders());

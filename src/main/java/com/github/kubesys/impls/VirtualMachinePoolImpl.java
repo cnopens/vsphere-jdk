@@ -39,11 +39,11 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 	
 	protected Datastore datastoreService;
 	
+	protected ResourcePool resourcePoolService;
+	
 	protected Host hostService;
 	
 	protected Folder folderService;
-	
-	protected ResourcePool resourcePoolService;
 	
 	protected Deployment deploymentService;
 	
@@ -92,6 +92,7 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		return this.clusterService.get(name);
 	}
 	
+	
 	public List<com.vmware.vcenter.DatastoreTypes.Summary> listDatastores() {
 		com.vmware.vcenter.DatastoreTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.DatastoreTypes.FilterSpec.Builder();
 		return this.datastoreService.list(brdl.build());
@@ -113,10 +114,14 @@ public class VirtualMachinePoolImpl extends AbstractImpl {
 		return this.hostService.list(brdl.setClusters(names).build());
 	}
 	
-	
 	public List<com.vmware.vcenter.FolderTypes.Summary> listFolders() {
 		com.vmware.vcenter.FolderTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.FolderTypes.FilterSpec.Builder();
 		return this.folderService.list(brdl.build());
+	}
+	
+	public List<com.vmware.vcenter.FolderTypes.Summary> listFolders(Set<String> groups) {
+		com.vmware.vcenter.FolderTypes.FilterSpec.Builder brdl = new com.vmware.vcenter.FolderTypes.FilterSpec.Builder();
+		return this.folderService.list(brdl.setFolders(groups).build());
 	}
 	
 	public List<com.vmware.vcenter.ResourcePoolTypes.Summary> listPools() {
